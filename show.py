@@ -15,7 +15,7 @@ ENV_NAME = "PandaReach-v3"
 MAX_EPISODE_STEPS = 50
 TARGET_RANGE = 0.3
 WINDOW_SCALE = 1.5
-MODEL_DIR = "./models/"
+MODEL_DIR = "./models/models/"
 LOG_DIR = "./logs/"
 PLOT_DIR = "./plots/"
 
@@ -31,7 +31,8 @@ print("=" * 70)
 print("PANDA REACH - VISUALIZATION & EVALUATION")
 print("=" * 70)
 print(f"\nLoading model from {MODEL_DIR}...")
-model = PPO.load(MODEL_DIR + "best_model")
+# model = PPO.load(MODEL_DIR + "best_model")
+model = PPO.load(MODEL_DIR + "panda_reach_interrupted")
 print("Model loaded successfully")
 
 def make_env():
