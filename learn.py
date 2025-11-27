@@ -188,12 +188,26 @@ except KeyboardInterrupt:
 # ==================== TRAINING RESULTS VISUALIZATION ====================
 print("\nGenerating training plots...")
 try:
+    import pandas as pd
     from stable_baselines3.common.results_plotter import load_results, ts2xy
     
+    # Load results with error handling
     results = load_results(LOG_DIR)
-    x, y = ts2xy(results, 'timesteps')
     
-    if len(y) > 0:
+    # Convert columns to numeric, replacing errors with NaN
+    results['r'] = pd.to_numeric(results['r'], errors='coerce')
+    results['l'] = pd.to_numeric(results['l'], errors='coerce')
+    results['t'] = pd.to_numeric(results['t'], errors='coerce')
+    
+    # Drop rows with NaN values
+    results = results.dropna(subset=['r', 'l', 't'])
+    
+    if len(results) > 0:
+        # Extract data
+        x = np.cumsum(results['l'].values)  # Timesteps
+        y = results['r'].values  # Rewards
+        episode_lengths = results['l'].values
+        
         fig = plt.figure(figsize=(16, 10))
         fig.suptitle('Panda Reach Training Results', fontsize=16, fontweight='bold')
         
@@ -201,7 +215,7 @@ try:
         ax1 = plt.subplot(2, 2, 1)
         ax1.plot(x, y, alpha=0.6, linewidth=1, color='blue')
         if len(y) > 50:
-            window = 50
+            window = min(50, len(y) // 4)
             moving_avg = np.convolve(y, np.ones(window)/window, mode='valid')
             ax1.plot(x[window-1:], moving_avg, 'r-', linewidth=2, label=f'MA({window})')
             ax1.legend()
@@ -213,10 +227,9 @@ try:
         
         # Episode Length
         ax2 = plt.subplot(2, 2, 2)
-        episode_lengths = results['l'].values
         ax2.plot(episode_lengths, alpha=0.6, linewidth=1, color='purple')
         if len(episode_lengths) > 50:
-            window = 50
+            window = min(50, len(episode_lengths) // 4)
             moving_avg = np.convolve(episode_lengths, np.ones(window)/window, mode='valid')
             ax2.plot(range(window-1, len(episode_lengths)), moving_avg, 'orange', linewidth=2, label=f'MA({window})')
             ax2.legend()
@@ -251,7 +264,6 @@ try:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         plot_path = f"{PLOT_DIR}training_results_{timestamp}.png"
         plt.savefig(plot_path, dpi=150, bbox_inches='tight')
-        plt.savefig(LOG_DIR + "training_results.png", dpi=150, bbox_inches='tight')
         print(f"Training plots saved to: {plot_path}")
         plt.close()
         
@@ -267,9 +279,13 @@ try:
         print(f"Median Reward:        {np.median(y):.3f}")
         print(f"Mean Episode Length:  {np.mean(episode_lengths):.1f}")
         print("=" * 70)
+    else:
+        print("No valid training data found for plotting")
     
 except Exception as e:
     print(f"Failed to generate plots: {e}")
+    import traceback
+    traceback.print_exc()
 
 # ==================== MODEL EVALUATION ====================
 print("\n" + "=" * 70)
