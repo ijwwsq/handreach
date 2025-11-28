@@ -28,9 +28,9 @@ python show.py
 
 Training was conducted over 300,000 steps with periodic checkpointing every 20,000 steps.
 
-![Training Results](./logs/training_results.png)
+![Training Results](./plots/training_results_20251127_212112.png)
 
-![Evaluation Metrics](./plots/evaluation_results_20251128_115305.png)
+![Evaluation Metrics](./plots/evaluation_results_20251127_205803.png)
 
 ## Project Structure
 
