@@ -33,6 +33,7 @@ print("=" * 70)
 print(f"\nLoading model from {MODEL_DIR}...")
 # model = PPO.load(MODEL_DIR + "best_model")
 model = PPO.load(MODEL_DIR + "panda_reach_interrupted")
+# model = PPO.load(MODEL_DIR + "panda_reach_final")
 print("Model loaded successfully")
 
 def make_env():
@@ -205,7 +206,7 @@ def create_overlay(frame, episode_reward, step, stats, is_success, fps):
     
     # Вся информация белым цветом
     # Заголовок
-    cv2.putText(frame, "PANDA REACH AGENT", (10, 30), 
+    cv2.putText(frame, "PPO REACH AGENT", (10, 30), 
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, COLOR_WHITE, 2)
     
     # Левая колонка
@@ -267,6 +268,7 @@ try:
              int(frame.shape[0] * WINDOW_SCALE)),
             interpolation=cv2.INTER_LINEAR
         )
+        time.sleep(0.05)
         
         # Расчет FPS
         fps = 1 / max(time.time() - prev_time, 1e-6)
