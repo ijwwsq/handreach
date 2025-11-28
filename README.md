@@ -1,5 +1,10 @@
 # handreach
 
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyBullet](https://img.shields.io/badge/physics-PyBullet-orange.svg)](https://pybullet.org)
+[![Stable-Baselines3](https://img.shields.io/badge/RL-Stable--Baselines3-green.svg)](https://stable-baselines3.readthedocs.io/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Reinforcement learning for Franka Emika Panda robot reaching tasks using Proximal Policy Optimization.
 
 ## Installation
